@@ -1,0 +1,10 @@
+{
+  "envName": "dev",
+  "account": "341450653870",
+  "region": "us-east-1",
+  "apiDomainCertificateArn": "arn:aws:acm:us-east-1:341450653870:certificate/32330979-2b1e-4cb4-96ef-d82cf77106fd",
+  "rootDomain": "gigbusters.app",
+  "apiSubdomain": "api",
+  "userPoolArn": "arn:aws:cognito-idp:us-east-1:341450653870:userpool/us-east-1_CzI0ql6Mi",
+  "basePath": "message"
+}

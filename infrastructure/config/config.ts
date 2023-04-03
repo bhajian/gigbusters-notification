@@ -9,6 +9,9 @@ interface Env {
     apiSubdomain: string | undefined
     userPoolArn: string | undefined
     basePath: string | undefined
+    authenticatedRoleArn: string | undefined
+    unauthenticatedRoleArn: string | undefined
+    adminRoleArn: string | undefined
 }
 
 interface AppConfig {
@@ -20,6 +23,9 @@ interface AppConfig {
     apiSubdomain: string
     userPoolArn: string
     basePath: string
+    authenticatedRoleArn: string
+    unauthenticatedRoleArn: string
+    adminRoleArn: string
 }
 
 const getConfig = (): Env => {
@@ -31,7 +37,10 @@ const getConfig = (): Env => {
         rootDomain: configFile.rootDomain,
         apiSubdomain: configFile.apiSubdomain,
         userPoolArn: configFile.userPoolArn,
-        basePath: configFile.basePath
+        basePath: configFile.basePath,
+        authenticatedRoleArn: configFile.authenticatedRoleArn,
+        unauthenticatedRoleArn: configFile.unauthenticatedRoleArn,
+        adminRoleArn: configFile.adminRoleArn,
     };
 };
 

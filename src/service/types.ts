@@ -1,18 +1,19 @@
-export interface MessageKeyParams {
+export interface NotificationKeyParams {
     id: string
     fromUserId: string
     toUserId: string
 }
-export interface MessageEntity {
+export interface NotificationEntity {
     id?: string
-    fromUserId: string
-    toUserId: string
+    userId: string
+    type: string
+    subjectId: string
     message: string
     dateTime?: string
 }
 
-export interface MessageResponse {
-    messages: MessageEntity[]
+export interface NotificationResponse {
+    messages: NotificationEntity[]
     lastEvaluatedKey?: string
     itemCount: number
 }

@@ -4,11 +4,11 @@ import {
     APIGatewayProxyEvent
 } from 'aws-lambda';
 import {Env} from "../lib/env";
-import {MessageService} from "../service/message-service";
+import {NotificationService} from "../service/notification-service";
 import {getQueryString, getSub} from "../lib/utils";
 
 const table = Env.get('TABLE')
-const service = new MessageService({
+const service = new NotificationService({
     table: table
 })
 

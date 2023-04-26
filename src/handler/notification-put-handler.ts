@@ -5,11 +5,11 @@ import {
 } from 'aws-lambda';
 import {getEventBody, getSub} from "../lib/utils";
 import {Env} from "../lib/env";
-import {MessageService} from "../service/message-service";
-import {MessageEntity} from "../service/types";
+import {NotificationService} from "../service/notification-service";
+import {NotificationEntity} from "../service/types";
 
 const table = Env.get('TABLE')
-const service = new MessageService({
+const service = new NotificationService({
     table: table
 })
 
@@ -26,7 +26,7 @@ export async function handler(event: APIGatewayProxyEvent, context: Context):
         body: 'Hello From Todo Edit Api!'
     }
     try {
-        const item = getEventBody(event) as MessageEntity;
+        const item = getEventBody(event) as NotificationEntity;
         const sub = getSub(event)
         item.userId = sub
         const res = await service.put(item)

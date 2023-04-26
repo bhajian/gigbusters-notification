@@ -1,6 +1,6 @@
 import {JsonSchemaType} from "aws-cdk-lib/aws-apigateway";
 
-export const putMessageSchema = {
+export const putNotificationSchema = {
     type: JsonSchemaType.OBJECT,
     required: [
         "category", "ranking"

@@ -1,24 +1,24 @@
 import { DocumentClient, ScanInput } from 'aws-sdk/clients/dynamodb'
 import {
-    MessageEntity,
-    MessageKeyParams, MessageResponse
+    NotificationEntity,
+    NotificationKeyParams, NotificationResponse
 } from "./types"
 import { v4 as uuidv4 } from 'uuid'
 
-interface MessageServiceProps{
+interface NotificationServiceProps{
     table: string
 }
 
-export class MessageService {
+export class NotificationService {
 
-    private props: MessageServiceProps
+    private props: NotificationServiceProps
     private documentClient = new DocumentClient()
 
-    public constructor(props: MessageServiceProps){
+    public constructor(props: NotificationServiceProps){
         this.props = props
     }
 
-    async list(params: any): Promise<MessageResponse> {
+    async list(params: any): Promise<NotificationResponse> {
         const lastEvaluatedKey = params.lastEvaluatedCategory ? {
             category: params.lastEvaluatedCategory
         } : undefined
@@ -35,16 +35,16 @@ export class MessageService {
                 ExclusiveStartKey: lastEvaluatedKey
             }).promise()
         if (response.Items === undefined) {
-            return {} as MessageResponse
+            return {} as NotificationResponse
         }
         return {
             messages: response.Items,
             lastEvaluatedKey: response.LastEvaluatedKey,
             itemCount: response.Count
-        } as MessageResponse
+        } as NotificationResponse
     }
 
-    async get(params: MessageKeyParams): Promise<MessageEntity> {
+    async get(params: NotificationKeyParams): Promise<NotificationEntity> {
         const response = await this.documentClient
             .get({
                 TableName: this.props.table,
@@ -52,10 +52,10 @@ export class MessageService {
                     category: params.fromUserId,
                 },
             }).promise()
-        return response.Item as MessageEntity
+        return response.Item as NotificationEntity
     }
 
-    async put(params: MessageEntity): Promise<MessageEntity> {
+    async put(params: NotificationEntity): Promise<NotificationEntity> {
         const now = new Date()
         params.dateTime = now.toISOString()
         params.id = uuidv4()
@@ -76,7 +76,7 @@ export class MessageService {
         return params
     }
 
-    async delete(params: MessageKeyParams) {
+    async delete(params: NotificationKeyParams) {
         const response = await this.documentClient
             .delete({
                 TableName: this.props.table,

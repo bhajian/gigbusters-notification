@@ -8,10 +8,10 @@ import {Bucket, HttpMethods} from "aws-cdk-lib/aws-s3";
 import {Effect, PolicyStatement, Role} from "aws-cdk-lib/aws-iam";
 
 
-export class MessageStatefulStack extends Stack {
+export class NotificationStatefulStack extends Stack {
     public dynamodbTable: GenericDynamoTable
     private suffix: string
-    public messageImageBucket: Bucket
+    public notificationImageBucket: Bucket
 
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
@@ -28,25 +28,27 @@ export class MessageStatefulStack extends Stack {
     }
 
     private initializeDynamoDBTable() {
-        this.dynamodbTable = new GenericDynamoTable(this, 'MessageDynamoDBTable', {
-            tableName: `Message-${config.envName}-${this.suffix}`,
+        this.dynamodbTable = new GenericDynamoTable(this, 'NotificationDynamoDBTable', {
+            tableName: `Notification-${config.envName}-${this.suffix}`,
             primaryKey: 'id',
             // stream: StreamViewType.NEW_AND_OLD_IMAGES,
             keyType: AttributeType.STRING,
+            sortKeyName: 'dateTime',
+            sortKeyType: AttributeType.STRING,
         })
         this.dynamodbTable.addSecondaryIndexes({
             indexName: "user-index",
-            partitionKeyName: "fromUserId",
+            partitionKeyName: "userId",
             partitionKeyType: AttributeType.STRING,
-            sortKeyName: 'toUserId',
-            sortKeyType: AttributeType.NUMBER,
+            sortKeyName: 'dateTime',
+            sortKeyType: AttributeType.STRING,
         })
     }
 
     private initializeMessagePhotosBucket() {
-        this.messageImageBucket = new Bucket(this, 'message-image', {
+        this.notificationImageBucket = new Bucket(this, 'notification-image', {
             removalPolicy: RemovalPolicy.DESTROY,
-            bucketName: `message-image-${config.envName}-${this.suffix}`,
+            bucketName: `notification-image-${config.envName}-${this.suffix}`,
             cors: [{
                 allowedMethods: [
                     HttpMethods.HEAD,
@@ -57,16 +59,16 @@ export class MessageStatefulStack extends Stack {
                 allowedHeaders: ['*']
             }]
         });
-        new CfnOutput(this, 'message-image-bucket-name', {
-            value: this.messageImageBucket.bucketName
+        new CfnOutput(this, 'notification-image-bucket-name', {
+            value: this.notificationImageBucket.bucketName
         })
     }
 
     private initializeMessageBucketPolicies() {
         const authenticatedRole = Role.fromRoleArn(
-            this, 'authenticatedRoleMessage', config.authenticatedRoleArn)
+            this, 'authenticatedRoleNotification', config.authenticatedRoleArn)
         const adminRole = Role.fromRoleArn(
-            this, 'adminRoleMessage', config.adminRoleArn)
+            this, 'adminRoleNotification', config.adminRoleArn)
         const uploadBucketPolicy = new PolicyStatement({
             effect: Effect.ALLOW,
             actions: [
@@ -75,7 +77,7 @@ export class MessageStatefulStack extends Stack {
                 's3:GetObject',
                 's3:DeleteObject'
             ],
-            resources: [this.messageImageBucket.bucketArn + '/*']
+            resources: [this.notificationImageBucket.bucketArn + '/*']
         })
         authenticatedRole.addToPrincipalPolicy(uploadBucketPolicy)
         adminRole.addToPrincipalPolicy(uploadBucketPolicy)

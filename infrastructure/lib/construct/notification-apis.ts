@@ -27,7 +27,7 @@ export interface MessageApiProps {
     idResource: IResource
 }
 
-export class MessageApis extends GenericApi {
+export class NotificationApis extends GenericApi {
     private listApi: NodejsFunction
     private putApi: NodejsFunction
     private getApi: NodejsFunction

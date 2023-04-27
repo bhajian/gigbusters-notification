@@ -2,7 +2,7 @@ import {Construct} from "constructs";
 import {GenericDynamoTable} from "../generic/GenericDynamoTable";
 import {GenericApi} from "../generic/GenericApi";
 import {NodejsFunction} from "aws-cdk-lib/aws-lambda-nodejs";
-import {putNotificationSchema} from "./message-schema";
+import {putNotificationSchema} from "./notification-schema";
 import {CognitoUserPoolsAuthorizer, IResource} from "aws-cdk-lib/aws-apigateway";
 import {AuthorizationType} from "@aws-cdk/aws-apigateway";
 import config from "../../config/config";

@@ -31,13 +31,13 @@ export class NotificationStatefulStack extends Stack {
         this.dynamodbTable = new GenericDynamoTable(this, 'NotificationDynamoDBTable', {
             tableName: `Notification-${config.envName}-${this.suffix}`,
             primaryKey: 'id',
-            // stream: StreamViewType.NEW_AND_OLD_IMAGES,
+            stream: StreamViewType.NEW_AND_OLD_IMAGES,
             keyType: AttributeType.STRING,
-            sortKeyName: 'dateTime',
-            sortKeyType: AttributeType.STRING,
+            // sortKeyName: 'dateTime',
+            // sortKeyType: AttributeType.STRING,
         })
         this.dynamodbTable.addSecondaryIndexes({
-            indexName: "user-index",
+            indexName: "userIndex",
             partitionKeyName: "userId",
             partitionKeyType: AttributeType.STRING,
             sortKeyName: 'dateTime',

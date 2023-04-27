@@ -18,30 +18,39 @@ export class NotificationService {
         this.props = props
     }
 
-    async list(params: any): Promise<NotificationResponse> {
+    async put(params: NotificationEntity): Promise<NotificationEntity> {
+        const now = new Date()
+        params.dateTime = now.toISOString()
+        params.id = uuidv4()
+        await this.documentClient
+            .put({
+                TableName: this.props.table,
+                Item: params,
+            }).promise()
+        return params
+    }
+
+    async list(params: any): Promise<any> {
         const lastEvaluatedKey = params.lastEvaluatedCategory ? {
             category: params.lastEvaluatedCategory
         } : undefined
 
         const response = await this.documentClient
-            .scan({
+            .query({
                 TableName: this.props.table,
-                IndexName: 'category-index',
-                FilterExpression: 'contains(lowerCaseCategory, :prefix)',
+                IndexName: 'userIndex',
+                KeyConditionExpression: 'userId = :userId',
                 ExpressionAttributeValues: {
-                    ':prefix': params.prefix.toLowerCase()
+                    ':userId': params.userId,
                 },
+                ScanIndexForward: false,
                 Limit: params.limit,
                 ExclusiveStartKey: lastEvaluatedKey
             }).promise()
         if (response.Items === undefined) {
             return {} as NotificationResponse
         }
-        return {
-            messages: response.Items,
-            lastEvaluatedKey: response.LastEvaluatedKey,
-            itemCount: response.Count
-        } as NotificationResponse
+        return response
     }
 
     async get(params: NotificationKeyParams): Promise<NotificationEntity> {
@@ -55,26 +64,7 @@ export class NotificationService {
         return response.Item as NotificationEntity
     }
 
-    async put(params: NotificationEntity): Promise<NotificationEntity> {
-        const now = new Date()
-        params.dateTime = now.toISOString()
-        params.id = uuidv4()
-        const getResponse = await this.documentClient
-            .get({
-                TableName: this.props.table,
-                Key: {
-                    id: params.id,
-                },
-            }).promise()
-        if(!getResponse.Item){
-            await this.documentClient
-                .put({
-                    TableName: this.props.table,
-                    Item: params,
-                }).promise()
-        }
-        return params
-    }
+
 
     async delete(params: NotificationKeyParams) {
         const response = await this.documentClient

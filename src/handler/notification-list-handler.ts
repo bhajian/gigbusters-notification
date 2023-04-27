@@ -4,11 +4,11 @@ import {
     APIGatewayProxyEvent
 } from 'aws-lambda';
 import {Env} from "../lib/env";
-import {MessageService} from "../service/message-service";
+import {NotificationService} from "../service/notification-service";
 import {getQueryString, getSub} from "../lib/utils";
 
 const table = Env.get('TABLE')
-const service = new MessageService({
+const service = new NotificationService({
     table: table
 })
 
@@ -27,17 +27,13 @@ export async function handler(event: APIGatewayProxyEvent, context: Context):
     try{
         const userId = getSub(event)
         const limit = getQueryString(event, 'limit')
-        const prefix = getQueryString(event, 'prefix')
-        const lastEvaluatedCategory = getQueryString(event, 'lastEvaluatedCategory')
-        const lastEvaluatedRanking = getQueryString(event, 'lastEvaluatedRanking')
-        const item = await service.list({
+        const lastEvaluatedKey = getQueryString(event, 'lastEvaluatedKey')
+        const res = await service.list({
+            userId: userId,
             limit: limit,
-            lastEvaluatedCategory: lastEvaluatedCategory,
-            lastEvaluatedRanking: lastEvaluatedRanking,
-            prefix: (prefix? prefix : '')
+            lastEvaluatedKey: lastEvaluatedKey,
         })
-
-        result.body = JSON.stringify(item)
+        result.body = JSON.stringify(res)
         return result
     }
     catch (e) {

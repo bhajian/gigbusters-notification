@@ -6,7 +6,7 @@
   "rootDomain": "gigbusters.app",
   "apiSubdomain": "api",
   "userPoolArn": "arn:aws:cognito-idp:us-east-1:341450653870:userpool/us-east-1_CzI0ql6Mi",
-  "basePath": "message",
+  "basePath": "notification",
   "authenticatedRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-profileCognitoIdCognitoDefaul-QN0O18V97VIM",
   "unauthenticatedRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-profileCognitoIdCognitoDefaul-CPGR1XQSMEX6",
   "adminRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-profileCognitoIdCognitoAdminR-1AP69N69RQK70"

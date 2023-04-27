@@ -1,4 +1,4 @@
-import {RemovalPolicy, Stack, StackProps} from "aws-cdk-lib";
+import {aws_dynamodb, RemovalPolicy, Stack, StackProps} from "aws-cdk-lib";
 import {AttributeType, StreamViewType, Table} from "aws-cdk-lib/aws-dynamodb";
 import {Effect, IGrantable, PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {Construct} from "constructs";
@@ -32,6 +32,7 @@ export class GenericDynamoTable extends Construct {
 
         this.table = new Table(this, id, {
             removalPolicy: RemovalPolicy.DESTROY,
+            billingMode: aws_dynamodb.BillingMode.PAY_PER_REQUEST,
             partitionKey: {
                 name: this.props.primaryKey,
                 type: AttributeType.STRING

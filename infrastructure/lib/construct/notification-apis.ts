@@ -2,7 +2,7 @@ import {Construct} from "constructs";
 import {GenericDynamoTable} from "../generic/GenericDynamoTable";
 import {GenericApi} from "../generic/GenericApi";
 import {NodejsFunction} from "aws-cdk-lib/aws-lambda-nodejs";
-import {putMessageSchema} from "./message-schema";
+import {putNotificationSchema} from "./notification-schema";
 import {CognitoUserPoolsAuthorizer, IResource} from "aws-cdk-lib/aws-apigateway";
 import {AuthorizationType} from "@aws-cdk/aws-apigateway";
 import config from "../../config/config";
@@ -20,14 +20,14 @@ export interface AuthorizerProps {
     userPoolArn: string
 }
 
-export interface MessageApiProps {
+export interface NotificationApiProps {
     table: Table
     authorizer: CognitoUserPoolsAuthorizer
     rootResource: IResource
     idResource: IResource
 }
 
-export class MessageApis extends GenericApi {
+export class NotificationApis extends GenericApi {
     private listApi: NodejsFunction
     private putApi: NodejsFunction
     private getApi: NodejsFunction
@@ -56,7 +56,7 @@ export class MessageApis extends GenericApi {
         })
 
         const idResource = this.api.root.addResource('{id}')
-        this.initializeMessageApis({
+        this.initializeNotificationApis({
             authorizer: authorizer,
             idResource: idResource,
             rootResource: this.api.root,
@@ -65,10 +65,10 @@ export class MessageApis extends GenericApi {
 
     }
 
-    private initializeMessageApis(props: MessageApiProps){
+    private initializeNotificationApis(props: NotificationApiProps){
         this.listApi = this.addMethod({
-            functionName: 'message-list',
-            handlerName: 'message-list-handler.ts',
+            functionName: 'notification-list',
+            handlerName: 'notification-list-handler.ts',
             verb: 'GET',
             resource: props.rootResource,
             environment: {
@@ -80,15 +80,15 @@ export class MessageApis extends GenericApi {
         })
 
         this.putApi = this.addMethod({
-            functionName: 'message-put',
-            handlerName: 'message-put-handler.ts',
+            functionName: 'notification-put',
+            handlerName: 'notification-put-handler.ts',
             verb: 'PUT',
             resource: props.rootResource,
             environment: {
                 TABLE: props.table.tableName
             },
-            validateRequestBody: true,
-            bodySchema: putMessageSchema,
+            validateRequestBody: false,
+            // bodySchema: putNotificationSchema,
             authorizationType: AuthorizationType.COGNITO,
             authorizer: props.authorizer
         })

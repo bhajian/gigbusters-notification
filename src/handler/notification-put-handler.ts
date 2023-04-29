@@ -10,7 +10,7 @@ import {NotificationEntity} from "../service/types";
 
 const table = Env.get('TABLE')
 const service = new NotificationService({
-    table: table
+    notificationTable: table
 })
 
 export async function handler(event: APIGatewayProxyEvent, context: Context):

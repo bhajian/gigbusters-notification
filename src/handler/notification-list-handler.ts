@@ -8,8 +8,12 @@ import {NotificationService} from "../service/notification-service";
 import {getQueryString, getSub} from "../lib/utils";
 
 const table = Env.get('TABLE')
+const profileTable = Env.get('PROFILE_TABLE')
+const taskTable = Env.get('TASK_TABLE')
 const service = new NotificationService({
-    table: table
+    notificationTable: table,
+    profileTable: profileTable,
+    taskTable: taskTable
 })
 
 export async function handler(event: APIGatewayProxyEvent, context: Context):

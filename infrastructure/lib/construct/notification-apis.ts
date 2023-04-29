@@ -6,7 +6,7 @@ import {putNotificationSchema} from "./notification-schema";
 import {CognitoUserPoolsAuthorizer, IResource} from "aws-cdk-lib/aws-apigateway";
 import {AuthorizationType} from "@aws-cdk/aws-apigateway";
 import config from "../../config/config";
-import {Table} from "aws-cdk-lib/aws-dynamodb";
+import {ITable, Table} from "aws-cdk-lib/aws-dynamodb";
 import {UserPool} from "aws-cdk-lib/aws-cognito";
 
 export interface ApiProps {
@@ -66,13 +66,18 @@ export class NotificationApis extends GenericApi {
     }
 
     private initializeNotificationApis(props: NotificationApiProps){
+        const profileTable = this.getProfileTable()
+        const taskTable = this.getTaskTable()
+
         this.listApi = this.addMethod({
             functionName: 'notification-list',
             handlerName: 'notification-list-handler.ts',
             verb: 'GET',
             resource: props.rootResource,
             environment: {
-                TABLE: props.table.tableName
+                TABLE: props.table.tableName,
+                PROFILE_TABLE: profileTable.tableName,
+                TASK_TABLE: taskTable.tableName
             },
             validateRequestBody: false,
             authorizationType: AuthorizationType.COGNITO,
@@ -95,6 +100,17 @@ export class NotificationApis extends GenericApi {
 
         props.table.grantFullAccess(this.listApi.grantPrincipal)
         props.table.grantFullAccess(this.putApi.grantPrincipal)
+
+        profileTable.grantFullAccess(this.listApi.grantPrincipal)
+        taskTable.grantFullAccess(this.listApi.grantPrincipal)
+    }
+
+    public getProfileTable() : ITable {
+        return Table.fromTableArn(this, 'profileTableId', config.profileTableArn)
+    }
+
+    public getTaskTable() : ITable {
+        return Table.fromTableArn(this, 'taskTableId', config.taskTableArn)
     }
 
     protected createAuthorizer(props: AuthorizerProps): CognitoUserPoolsAuthorizer{

@@ -54,7 +54,11 @@ export class NotificationService {
         }
         const transactions: NotificationEntity[] = response?.Items as NotificationEntity[]
         const transactionComplex = await this.mergeTransactions(transactions)
-        return transactionComplex
+        return {
+            Items: transactionComplex,
+            Count: response?.Count,
+            LastEvaluatedKey: response?.LastEvaluatedKey
+        }
     }
 
     async get(params: NotificationKeyParams): Promise<NotificationEntity> {

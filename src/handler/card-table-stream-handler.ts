@@ -21,8 +21,12 @@ export async function handler(event: any) {
         const record = event.Records[i]
         const newImage = DynamoDB.Converter.unmarshall(record.dynamodb.NewImage)
         const oldImage = DynamoDB.Converter.unmarshall(record.dynamodb.OldImage)
-        if(record?.eventName === 'INSERT' || record.eventName === 'MODIFY'){
-
+        if(record?.eventName === 'INSERT' && newImage?.userId){
+            console.log(newImage)
+            await notificationService.sendCardAvailableNotification({
+                newImage: newImage?.userId,
+                eventName: record.eventName
+            })
         }
     }
 }

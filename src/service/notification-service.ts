@@ -327,6 +327,44 @@ export class NotificationService {
         }
     }
 
+    async updateProfile(params: any) {
+        const now = new Date()
+        await this.documentClient
+            .update({
+                TableName: this.props.profileTable,
+                Key: {
+                    userId: params.userId,
+                },
+                UpdateExpression: 'set lastSwipeNotificationTime = :lastSwipeNotificationTime',
+                ExpressionAttributeValues : {
+                    ':lastSwipeNotificationTime': now.getTime()
+                }
+            }).promise()
+    }
+
+    async sendCardAvailableNotification(params: any): Promise<any> {
+        const now = new Date()
+        const profile = await this.getProfile({
+            userId: params.userId
+        })
+        if(profile && profile?.notificationToken &&
+            (!profile?.lastSwipeNotificationTime ||
+            (now.getTime() - profile?.lastSwipeNotificationTime > 43200000))){
+            await this.updateProfile({
+                userId: params.userId
+            })
+            let notificationType = 'Worker/Home'
+            await this.sendPushNotification({
+                notificationToken: profile?.notificationToken,
+                title: 'New Tasks/Jobs are Available to Swipe.',
+                body: 'There are new tasks available. You may now open the app and start swiping.',
+                data: {
+                    notificationType: notificationType
+                }
+            })
+        }
+    }
+
     async getProfile(params: any): Promise<any> {
         const response = await this.documentClient
             .get({

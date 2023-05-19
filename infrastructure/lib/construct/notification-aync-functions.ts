@@ -60,11 +60,15 @@ export class NotificationAyncFunctions extends GenericAsyncFunction {
         this.transactionTableStream.addEventSource(new DynamoEventSource(
             transactionTable, {
                 startingPosition: StartingPosition.LATEST,
+                reportBatchItemFailures: true,
+                retryAttempts: 2
             }))
 
         this.cardTableStream.addEventSource(new DynamoEventSource(
             cardTable, {
                 startingPosition: StartingPosition.LATEST,
+                reportBatchItemFailures: true,
+                retryAttempts: 2
             }))
 
         this.props.notificationTable.table.grantFullAccess(this.transactionTableStream.grantPrincipal)
@@ -86,7 +90,7 @@ export class NotificationAyncFunctions extends GenericAsyncFunction {
     public getProfileTable() : ITable {
         return Table.fromTableAttributes(this, 'profileTableId', {
             tableArn: config.profileTableArn,
-            tableStreamArn: config.profileTableArnStream
+            tableStreamArn: config.profileTableArnStream,
         })
     }
 

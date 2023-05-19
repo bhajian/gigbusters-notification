@@ -1,5 +1,6 @@
+const env = process.env.DEPLOYMENT_ENV
+const configFile = require(`./dev.json`)
 
-const configFile = require('./dev.json')
 interface Env {
     envName: string | undefined
     account: string | undefined
@@ -13,7 +14,14 @@ interface Env {
     unauthenticatedRoleArn: string | undefined
     adminRoleArn: string | undefined
     profileTableArn: string | undefined
+    profileTableArnStream: string | undefined
     taskTableArn: string | undefined
+    taskTableArnStream: string | undefined
+    transactionTableArn: string | undefined
+    transactionTableArnStream: string | undefined
+    cardTableArn: string | undefined
+    cardTableArnStream: string | undefined
+    expoNotificationAccessToken: string | undefined
 }
 
 interface AppConfig {
@@ -29,7 +37,14 @@ interface AppConfig {
     unauthenticatedRoleArn: string
     adminRoleArn: string
     profileTableArn: string
+    profileTableArnStream: string
     taskTableArn: string
+    taskTableArnStream: string
+    transactionTableArn: string
+    transactionTableArnStream: string
+    cardTableArn: string
+    cardTableArnStream: string
+    expoNotificationAccessToken: string
 }
 
 const getConfig = (): Env => {
@@ -46,19 +61,26 @@ const getConfig = (): Env => {
         unauthenticatedRoleArn: configFile.unauthenticatedRoleArn,
         adminRoleArn: configFile.adminRoleArn,
         profileTableArn: configFile.profileTableArn,
-        taskTableArn: configFile.taskTableArn
+        profileTableArnStream: configFile.profileTableArnStream,
+        taskTableArn: configFile.taskTableArn,
+        taskTableArnStream: configFile.taskTableArnStream,
+        cardTableArn: configFile.cardTableArn,
+        cardTableArnStream: configFile.cardTableArnStream,
+        transactionTableArn: configFile.transactionTableArn,
+        transactionTableArnStream: configFile.transactionTableArnStream,
+        expoNotificationAccessToken: configFile.expoNotificationAccessToken
     };
 };
 
 const getSanitzedConfig = (config: Env): AppConfig => {
     for (const [key, value] of Object.entries(config)) {
         if (value === undefined) {
-            throw new Error(`Missing key ${key} in config file`);
+            throw new Error(`Missing key ${key} in config file`)
         }
     }
-    return config as AppConfig;
+    return config as AppConfig
 };
 
-const sanitizedConfig = getSanitzedConfig(getConfig());
+const sanitizedConfig = getSanitzedConfig(getConfig())
 
-export default sanitizedConfig;
+export default sanitizedConfig

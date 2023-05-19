@@ -1,0 +1,22 @@
+{
+  "envName": "prd",
+  "account": "341450653870",
+  "region": "us-east-1",
+  "apiDomainCertificateArn": "arn:aws:acm:us-east-1:341450653870:certificate/56ddab86-5b15-4760-b5dd-8627cf729cdb",
+  "rootDomain": "gigbusters.app",
+  "apiSubdomain": "api",
+  "userPoolArn": "arn:aws:cognito-idp:us-east-1:341450653870:userpool/us-east-1_iQeMJz211",
+  "basePath": "notification",
+  "authenticatedRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-prd-profileCognitoIdCognitoDe-19GUBQM3003XF",
+  "unauthenticatedRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-prd-profileCognitoIdCognitoDe-19R25XOKX2HWY",
+  "adminRoleArn": "arn:aws:iam::341450653870:role/ProfileStatefulStack-prd-profileCognitoIdCognitoAd-1LFEFPJCSPJQI",
+  "profileTableArn": "arn:aws:dynamodb:us-east-1:341450653870:table/Profile-prd-0aaaf082a7f1",
+  "profileTableArnStream": "arn:aws:dynamodb:us-east-1:341450653870:table/Profile-prd-0aaaf082a7f1",
+  "taskTableArn": "arn:aws:dynamodb:us-east-1:341450653870:table/Task-prd-0a5c16979371",
+  "taskTableArnStream": "arn:aws:dynamodb:us-east-1:341450653870:table/Task-prd-0a5c16979371/stream/2023-05-16T03:22:21.949",
+  "cardTableArn": "arn:aws:dynamodb:us-east-1:341450653870:table/Cards-prd-0a5c16979371",
+  "cardTableArnStream": "arn:aws:dynamodb:us-east-1:341450653870:table/Cards-prd-0a5c16979371/stream/2023-05-16T03:22:22.042",
+  "transactionTableArn": "arn:aws:dynamodb:us-east-1:341450653870:table/Transaction-prd-0a5c16979371",
+  "transactionTableArnStream": "arn:aws:dynamodb:us-east-1:341450653870:table/Transaction-prd-0a5c16979371/stream/2023-05-16T03:22:22.261",
+  "expoNotificationAccessToken": "ztSttlTCjJMuhE664-W_X6Ivd2yGQMFG0CAozV-W"
+}

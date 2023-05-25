@@ -24,7 +24,7 @@ export async function handler(event: any) {
         if(record?.eventName === 'INSERT' && newImage?.userId){
             console.log(newImage)
             await notificationService.sendCardAvailableNotification({
-                newImage: newImage?.userId,
+                userId: newImage?.userId,
                 eventName: record.eventName
             })
         }

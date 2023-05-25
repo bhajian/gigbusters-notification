@@ -329,6 +329,10 @@ export class NotificationService {
 
     async updateProfile(params: any) {
         const now = new Date()
+        console.log('TABLE_NAME::::----->>>>>')
+        console.log(this.props.profileTable)
+        console.log('USER_ID::::----->>>>>')
+        console.log(params.userId)
         await this.documentClient
             .update({
                 TableName: this.props.profileTable,
@@ -347,6 +351,7 @@ export class NotificationService {
         const profile = await this.getProfile({
             userId: params.userId
         })
+
         if(profile && profile?.notificationToken &&
             (!profile?.lastSwipeNotificationTime ||
             (now.getTime() - profile?.lastSwipeNotificationTime > 43200000))){
